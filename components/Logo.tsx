@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import logoBlack from "@/public/logo-black.png";
-import logoWhite from "@/public/logo-white.png";
+// import logoBlack from "@/public/logo-black.png";
+// import logoWhite from "@/public/logo-white.png";
 import { usePathname } from "next/navigation";
 
 const Logo = () => {
@@ -13,28 +13,41 @@ const Logo = () => {
       {isHomePage ? (
         <>
           <Image
-            src={logoWhite}
+            src="/logo-white.png"
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="block max-xl:hidden  dark:hidden cursor-pointer"
+            className="block max-xl:hidden dark:block w-[150px] cursor-pointer"
+            suppressHydrationWarning
           />
           <Image
-            src={logoBlack}
+            src="/logo-black.png"
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="block xl:hidden cursor-pointer"
+            className="block xl:hidden cursor-pointer w-[150px] dark:hidden"
+            suppressHydrationWarning
           />
         </>
       ) : (
-        <Image
-          src={logoBlack}
-          alt="WearVbo Logo"
-          width={150}
-          height={80}
-          className="cursor-pointer block dark:block "
-        />
+        <>
+          <Image
+            src="/logo-black.png"
+            alt="WearVbo Logo"
+            width={150}
+            height={80}
+            className="cursor-pointer block w-[150px] dark:hidden "
+            suppressHydrationWarning
+          />
+          <Image
+            src="/logo-white.png"
+            alt="WearVbo Logo"
+            width={150}
+            height={80}
+            className="hidden dark:block w-[150px]  cursor-pointer"
+            suppressHydrationWarning
+          />
+        </>
       )}
     </div>
   );

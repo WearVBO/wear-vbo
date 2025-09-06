@@ -31,7 +31,7 @@ const NavItems = () => {
           <Link
             key={link.name}
             href={link.path}
-            className={`${isHomePage ? "text-white" : "text-black"}  max-xl:text-black text-lg  transition-colors ${poppins.className} ${
+            className={`${isHomePage ? "text-white" : "text-black dark:text-white max-xl:text-black "}  max-xl:text-black text-lg  transition-colors ${poppins.className} ${
               isActive ? "underline underline-offset-10 decoration-[#EEB62A]" : ""  
             }`}
           >

@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { CiMenuFries } from "react-icons/ci";
 import Logo from "@/components/Logo";
@@ -13,13 +14,13 @@ import NavItems from '@/components/NavItems';
 
 const Header = () => {
   return (
-    <div className='2xl:hidden  bg-white '>
+    <div className='2xl:hidden    '>
         <div className='mx-auto'>
         <div className='items-center justify-between flex'>
             <Logo />
             <Sheet>
-                <SheetTrigger className="text-2xl">
-                <CiMenuFries />
+                <SheetTrigger className="text-2xl" >
+                <CiMenuFries suppressHydrationWarning/>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[250px] bg-white border-0 flex flex-col items-center">
                 <SheetHeader className='flex justify-between'>

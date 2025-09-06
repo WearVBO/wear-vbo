@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
@@ -17,7 +18,7 @@ const montserrat = Montserrat({
 
 const page = () => {
   return (
-    <div className="min-h-screen bg-[url('/light.jpg')] md:bg-cover overflow-hidden ">
+    <div className="min-h-screen bg-[url('/light.jpg')] dark:bg-[url('/dark.jpg')] md:bg-cover overflow-hidden ">
       <NavBar />
       <div
         className={` ${montserrat} flex flex-col justify-center items-center`}
@@ -47,8 +48,9 @@ const page = () => {
             src={active}
             alt="active"
             width={400}
-            height={400}
+            height={350}
             className="rounded-sm "
+            suppressHydrationWarning
           />
           <div>
             <Image
@@ -57,6 +59,7 @@ const page = () => {
               width={400}
               height={400}
               className=" md:h-[230px]  h-[190px] w-full  rounded-sm"
+              suppressHydrationWarning
             />
             <div className="flex space-x-4 mt-5">
               <Image
@@ -65,6 +68,7 @@ const page = () => {
                 width={200}
                 height={200}
                 className="rounded-sm"
+                suppressHydrationWarning
               />
               <Image
                 src={ladies}
@@ -72,13 +76,14 @@ const page = () => {
                 width={200}
                 height={200}
                 className="rounded-sm"
+                suppressHydrationWarning
               />
             </div>
           </div>
         </div>
       </div>
       <div className="">
-      <SocialLinks />
+        <SocialLinks />
       </div>
     </div>
   );

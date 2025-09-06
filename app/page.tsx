@@ -45,7 +45,7 @@ const Page = () => {
         </p>
         <Button
           onClick={openModal}
-          className={`${poppins.className} bg-[#EEB62A] text-md w-[200px] ease-out mt-4`}
+          className={`${poppins.className} bg-[#EEB62A] text-md w-[200px] ease-out mt-4 dark:text-white`}
         >
           Stay Updated
         </Button>
