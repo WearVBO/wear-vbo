@@ -14,7 +14,7 @@ import NavItems from '@/components/NavItems';
 
 const Header = () => {
   return (
-    <div className='2xl:hidden    '>
+    <div className=' lg:hidden   '>
         <div className='mx-auto'>
         <div className='items-center justify-between flex dark:bg-white'>
             <Logo />

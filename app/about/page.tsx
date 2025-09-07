@@ -44,7 +44,7 @@ const page = () => {
           motion.
         </p>
       </div>
-      <div className="flex flex-col items-center justify-center text-center mt-12  ">
+      <div className="flex flex-col items-center justify-center text-center mt-10  ">
         <div className="grid md:grid-cols-2 gap-6 md:p-0 p-3">
           <Image
             src={active}
@@ -60,7 +60,7 @@ const page = () => {
               alt="people"
               width={400}
               height={400}
-              className=" md:h-[230px]  h-[180px] w-full  rounded-sm"
+              className=" lg:h-[215px]  h-[180px] w-full  rounded-sm"
               suppressHydrationWarning
             />
             <div className="flex space-x-3 mt-5">
