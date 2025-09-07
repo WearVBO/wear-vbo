@@ -109,7 +109,12 @@ const ModalPopup: React.FC<ModalPopupProps> = ({ isOpen, onOpen, onClose }) => {
       <div className="relative justify-center items-center backdrop-blur-5xl">
         <div className="relative bg-white p-4 rounded-lg shadow-lg  w-full md:max-w-[400px] max-xl:max-w-[300px] mx-auto mt-5 box-content ">
           {step === "form" ? (
-            <div className="flex flex-col items-center justify-center mt-8 mb-3 ">
+            <div className="flex flex-col items-center justify-center mt-8 mb-3 relative">
+              <IoMdClose
+                className="absolute -top-7 right-2 cursor-pointer text-gray-500"
+                size={24}
+                onClick={closeModal}
+              />
               <h2
                 className={`${montserrat.className} font-bold text-xl dark:text-black `}
               >
