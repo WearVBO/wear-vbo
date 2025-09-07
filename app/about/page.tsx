@@ -31,25 +31,27 @@ const page = () => {
         <p
           className={`${montserrat.className} text-center w-full md:max-w-5xl max-w-3xl  md:text-lg text-sm md:p-0 p-3 mt-5 `}
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni, velit
-          temporibus facere minima earum sapiente veniam quisquam voluptatem
-          mollitia. Doloribus nesciunt assumenda, id excepturi est blanditiis
-          quisquam magnam minima? Delectus laborum quam, deserunt ipsa vitae
-          repellendus autem saepe enim labore iure ex voluptas est impedit modi
-          inventore nostrum reprehenderit. Placeat praesentium voluptates eos
-          officia. Culpa possimus officia, accusamus doloribus consectetur minus
-          aperiam obcaecati adipisci ipsum earum distinctio beatae tenetur
-          exercitationem?
+          At VBO, we believe in more than athleisure — we’re creating a
+          lifestyle where sport and timeless elegance intersect. Founded by four
+          athletes who understand the grind, every collection reflects
+          authenticity, performance, and refined design. From tennis matches to
+          gym sessions, travels to everyday life, VBO is crafted for movers who
+          demand versatility and style. Our performance fabrics deliver comfort,
+          durability, and sophistication, ensuring confidence on and off the
+          court. What makes us distinct: athlete-driven origins, classic
+          old-money influence, adaptable looks, and an empowering mission to
+          build a community where movement, confidence, and style are always in
+          motion.
         </p>
       </div>
       <div className="flex flex-col items-center justify-center text-center mt-12  ">
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 md:p-0 p-3">
           <Image
             src={active}
             alt="active"
             width={400}
             height={350}
-            className="rounded-sm "
+            className="rounded-sm w-full max-w-[400px] h-full max-h-[500px]"
             suppressHydrationWarning
           />
           <div>
@@ -58,16 +60,16 @@ const page = () => {
               alt="people"
               width={400}
               height={400}
-              className=" md:h-[230px]  h-[190px] w-full  rounded-sm"
+              className=" md:h-[230px]  h-[180px] w-full  rounded-sm"
               suppressHydrationWarning
             />
-            <div className="flex space-x-4 mt-5">
+            <div className="flex space-x-3 mt-5">
               <Image
                 src={lady}
                 alt="lady"
                 width={200}
                 height={200}
-                className="rounded-sm"
+                className="rounded-sm max-xl:h-[250px] max-xl:w-[250px]"
                 suppressHydrationWarning
               />
               <Image
@@ -75,7 +77,7 @@ const page = () => {
                 alt="ladies"
                 width={200}
                 height={200}
-                className="rounded-sm"
+                className="rounded-sm max-xl:h-[250px] max-xl:w-[250px]"
                 suppressHydrationWarning
               />
             </div>

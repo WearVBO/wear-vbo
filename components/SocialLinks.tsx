@@ -35,13 +35,13 @@ const SocialLinks = () => {
     const isHomePage = pathname === "/";
   return (
     <div>
-      <div className={`flex justify-center items-center absolute ${isHomePage ? "md:bottom-10 bottom-20  mt-8" : "mt-5"} left-1/2 transform -translate-x-1/2 space-x-5 `}>
+      <div className={`flex justify-center items-center absolute ${isHomePage ? "max-xl:-bottom-20 md:bottom-10" : "mt-5"} left-1/2 transform -translate-x-1/2 space-x-5 `}>
           {socialLinks.map((link) => (
             <Link
               key={link.name}
               href={link.link || "#"}
               target="_blank"
-              className={` border md:p-2 p-1 rounded-full md:text-2xl text-xl  transition-colors ${isHomePage ? "text-white " : "text-black border-black"}`}
+              className={` border md:p-2 p-1 rounded-full md:text-2xl text-xl  transition-colors ${isHomePage ? "text-white " : "text-black dark:text-white border-black dark:border-white"}`}
               suppressHydrationWarning
             >
               {link.icon}

@@ -16,16 +16,16 @@ const Header = () => {
   return (
     <div className='2xl:hidden    '>
         <div className='mx-auto'>
-        <div className='items-center justify-between flex'>
+        <div className='items-center justify-between flex dark:bg-white'>
             <Logo />
             <Sheet>
                 <SheetTrigger className="text-2xl" >
-                <CiMenuFries suppressHydrationWarning/>
+                <CiMenuFries suppressHydrationWarning className='dark:text-black -p-2'/>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[250px] bg-white border-0 flex flex-col items-center">
-                <SheetHeader className='flex justify-between'>
+                <SheetContent side="left" className="w-[250px] bg-white border-0 flex flex-col items-center dark:text-black">
+                <SheetHeader className='flex justify-between dark:text-black'>
                     <SheetTitle > 
-                        <Logo />
+                        <Logo  />
                     </SheetTitle>
                     <SheetDescription className='hidden'>
                     Explore our features and offerings.

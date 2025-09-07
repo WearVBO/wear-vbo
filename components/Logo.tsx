@@ -17,7 +17,7 @@ const Logo = () => {
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="block max-xl:hidden dark:block w-[150px] cursor-pointer"
+            className="block max-xl:hidden dark:block max-xl:dark:hidden w-[150px] cursor-pointer"
             suppressHydrationWarning
           />
           <Image
@@ -25,7 +25,7 @@ const Logo = () => {
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="block xl:hidden cursor-pointer w-[150px] dark:hidden"
+            className="block xl:hidden cursor-pointer w-[150px] dark:hidden max-xl:dark:block"
             suppressHydrationWarning
           />
         </>
@@ -36,7 +36,7 @@ const Logo = () => {
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="cursor-pointer block w-[150px] dark:hidden "
+            className="cursor-pointer block w-[150px] dark:hidden max-xl:dark:block "
             suppressHydrationWarning
           />
           <Image
@@ -44,7 +44,7 @@ const Logo = () => {
             alt="WearVbo Logo"
             width={150}
             height={80}
-            className="hidden dark:block w-[150px]  cursor-pointer"
+            className="hidden dark:block max-xl:dark:hidden w-[150px]  cursor-pointer"
             suppressHydrationWarning
           />
         </>
