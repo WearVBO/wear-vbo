@@ -23,7 +23,7 @@ const NavItems = () => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   return (
-    <div className="flex max-xl:flex-col space-x-4 max-xl:space-y-4 max-xl:items-start md:pr-10 md:mr-10">
+    <div className="flex max-xl:flex-col space-x-4 max-xl:space-y-4 max-xl:items-start ">
       {NavLinks.map((link) => {
         const isActive: boolean = pathname === link.path;
 

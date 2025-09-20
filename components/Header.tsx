@@ -14,13 +14,13 @@ import NavItems from '@/components/NavItems';
 
 const Header = () => {
   return (
-    <div className=' lg:hidden   '>
-        <div className='mx-auto'>
-        <div className='items-center justify-between flex dark:bg-white'>
+    <div className='lg:hidden   '>
+        <div className='mx-auto dark:bg-white'>
+        <div className='items-center justify-between flex px-3 py-2 '>
             <Logo />
             <Sheet>
                 <SheetTrigger className="text-2xl" >
-                <CiMenuFries suppressHydrationWarning className='dark:text-black -p-2'/>
+                <CiMenuFries suppressHydrationWarning className='dark:text-black -px-5'/>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[250px] bg-white border-0 flex flex-col items-center dark:text-black">
                 <SheetHeader className='flex justify-between dark:text-black'>

@@ -13,38 +13,38 @@ const Logo = () => {
       {isHomePage ? (
         <>
           <Image
-            src="/logo-white.png"
+            src="/new-white.png"
             alt="WearVbo Logo"
-            width={150}
-            height={80}
-            className="block max-xl:hidden dark:block max-xl:dark:hidden w-[150px] cursor-pointer"
+            width={80}
+            height={50}
+            className="block max-xl:hidden dark:block max-xl:dark:hidden w-[60px] mt-3 cursor-pointer"
             suppressHydrationWarning
           />
           <Image
-            src="/logo-black.png"
+            src="/new-black.png"
             alt="WearVbo Logo"
-            width={150}
-            height={80}
-            className="block xl:hidden cursor-pointer w-[150px] dark:hidden max-xl:dark:block"
+            width={80}
+            height={50}
+            className="block xl:hidden cursor-pointer w-[60px] dark:hidden mt-3 max-xl:dark:block"
             suppressHydrationWarning
           />
         </>
       ) : (
         <>
           <Image
-            src="/logo-black.png"
+            src="/new-black.png"
             alt="WearVbo Logo"
-            width={150}
-            height={80}
-            className="cursor-pointer block w-[150px] dark:hidden max-xl:dark:block "
+            width={80}
+            height={50}
+            className="cursor-pointer block w-[60px] mt-3 dark:hidden max-xl:dark:block "
             suppressHydrationWarning
           />
           <Image
-            src="/logo-white.png"
+            src="/new-white.png"
             alt="WearVbo Logo"
-            width={150}
-            height={80}
-            className="hidden dark:block max-xl:dark:hidden w-[150px]  cursor-pointer"
+            width={80}
+            height={50}
+            className="hidden dark:block max-xl:dark:hidden w-[60px]  mt-3 cursor-pointer"
             suppressHydrationWarning
           />
         </>
