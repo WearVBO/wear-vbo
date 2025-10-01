@@ -107,7 +107,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({ isOpen, onOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50  flex items-center justify-center z-50">
       <div className="relative justify-center items-center backdrop-blur-5xl">
-        <div className="relative bg-white p-4 rounded-lg shadow-lg  w-full md:max-w-[400px] max-xl:max-w-[300px] mx-auto mt-5 box-content ">
+        <div className="relative bg-white p-4 rounded-lg shadow-lg  w-full md:max-w-[400px] max-xl:max-w-[300px] mx-auto mt-5 box-content " data-aos="zoom-in-up">
           {step === "form" ? (
             <div className="flex flex-col items-center justify-center mt-8 mb-3 relative">
               <IoMdClose
@@ -152,7 +152,7 @@ const ModalPopup: React.FC<ModalPopupProps> = ({ isOpen, onOpen, onClose }) => {
               </form>
             </div>
           ) : (
-            <div className="text-center p-7 pb-10">
+            <div className="text-center p-7 pb-10" >
               <div className="relative -mt-17 mb-4">
                 <Image
                   src={image}

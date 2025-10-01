@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Header from "@/components/Header";
+import AOSInit from "@/components/AOSInit"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
         <div className="w-full max-w-[1130px]  mx-auto">
           <Header />
         </div>
+        <AOSInit />
         {children}
         </ThemeProvider>
       </body>

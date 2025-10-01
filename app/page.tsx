@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { motion } from "motion/react";
 
 import NavBar from "@/components/NavBar";
 import SocialLinks from "@/components/SocialLinks";
@@ -32,7 +33,12 @@ const Page = () => {
   return (
     <div className="h-screen  md:bg-[url('/desktop.jpg')] bg-[url('/mobile.jpg')] bg-cover bg-center overflow-hidden ">
       <NavBar />
-      <div className="flex  flex-col items-center justify-center text-center text-white md:mt-20 mt-30 ">
+      <motion.div
+        className="flex  flex-col items-center justify-center text-center text-white md:mt-20 mt-30 "
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        data-aos="zoom-out-up"
+      >
         <div
           className={`${montaguSlab.className} font-bold md:text-8xl text-6xl tracking-wider leading-snug text-center`}
         >
@@ -43,13 +49,15 @@ const Page = () => {
         <p className={`${montserrat.className} `}>
           Your era of active wear is almost here
         </p>
-        <Button
-          onClick={openModal}
-          className={`${poppins.className} bg-[#EEB62A] text-md w-[200px] ease-out mt-4 dark:text-white`}
-        >
-          Stay Updated
-        </Button>
-      </div>
+        <div data-aos="zoom-in-up">
+          <Button
+            onClick={openModal}
+            className={`${poppins.className} bg-[#EEB62A] text-md w-[200px] ease-out mt-4 dark:text-white`}
+          >
+            Stay Updated
+          </Button>
+        </div>
+      </motion.div>
 
       <div>
         <SocialLinks />

@@ -35,7 +35,7 @@ const SocialLinks = () => {
     const isHomePage = pathname === "/";
   return (
     <div>
-      <div className={`flex justify-center items-center absolute ${isHomePage ? "max-xl:-bottom-20 md:bottom-10" : "mt-5"} left-1/2 transform -translate-x-1/2 space-x-5 `}>
+      <div className={`flex justify-center items-center absolute ${isHomePage ? "max-xl:-bottom-20 md:bottom-10" : "mt-5"} left-1/2 transform -translate-x-1/2 space-x-5 `} >
           {socialLinks.map((link) => (
             <Link
               key={link.name}

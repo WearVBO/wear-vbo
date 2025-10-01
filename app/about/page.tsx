@@ -18,10 +18,10 @@ const montserrat = Montserrat({
 
 const page = () => {
   return (
-    <div className="min-h-screen bg-[url('/light.jpg')] dark:bg-[url('/dark.jpg')] md:bg-cover overflow-hidden ">
+    <div className="min-h-screen bg-[url('/light.jpg')] dark:bg-[url('/dark.jpg')] md:bg-cover overflow-hidden " >
       <NavBar />
       <div
-        className={` ${montserrat} flex flex-col justify-center items-center`}
+        className={` ${montserrat} flex flex-col justify-center items-center`} data-aos="fade-up" 
       >
         <h1
           className={`${montserrat.className} text-4xl font-bold text-center max-xl:mt-8`}
@@ -53,8 +53,9 @@ const page = () => {
             height={350}
             className="rounded-sm w-full max-w-[400px] h-full max-h-[500px]"
             suppressHydrationWarning
+             data-aos="zoom-in-right"
           />
-          <div>
+          <div data-aos="zoom-out">
             <Image
               src={people}
               alt="people"
@@ -62,6 +63,7 @@ const page = () => {
               height={400}
               className=" lg:h-[215px]  h-[180px] w-full  rounded-sm"
               suppressHydrationWarning
+             
             />
             <div className="flex space-x-3 mt-5">
               <Image
