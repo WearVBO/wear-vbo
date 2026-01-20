@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
-import Header from "@/components/Header";
-import AOSInit from "@/components/AOSInit"
+import NavBar from "@/components/containers/NavBar";
+import Header from "@/components/containers/Header";
+import AOSInit from "@/components/containers/AOSInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +31,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
-        <div className="hidden   ">
-        <NavBar />
-        </div>
-        <div className="w-full max-w-[1130px]  mx-auto">
-          <Header />
-        </div>
-        <AOSInit />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+        >
+          <div className="hidden   ">
+            <NavBar />
+          </div>
+          <div className="w-full max-w-[1130px]  mx-auto">
+            <Header />
+          </div>
+          <AOSInit />
+          {children}
         </ThemeProvider>
       </body>
     </html>

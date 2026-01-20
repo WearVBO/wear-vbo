@@ -1,10 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "motion/react";
 
-import NavBar from "@/components/NavBar";
-import SocialLinks from "@/components/SocialLinks";
-import ModalPopup from "@/components/ModalPopup";
+import NavBar from "@/components/containers/NavBar";
+import SocialLinks from "@/components/containers/SocialLinks";
+import ModalPopup from "@/components/containers/ModalPopup";
 import { Montagu_Slab } from "next/font/google";
 import { Montserrat } from "next/font/google";
 import { Poppins } from "next/font/google";
@@ -31,7 +32,7 @@ const Page = () => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className="h-screen  md:bg-[url('/desktop.jpg')] bg-[url('/mobile.jpg')] bg-cover bg-center overflow-hidden ">
+    <div className="h-screen  md:bg-[url('/Image/desktop.jpg')] bg-[url('/mobile.jpg')] bg-cover bg-center overflow-hidden ">
       <NavBar />
       <motion.div
         className="flex  flex-col items-center justify-center text-center text-white md:mt-20 mt-30 "
