@@ -21,7 +21,7 @@ const Logo = () => {
             suppressHydrationWarning
           />
           <Image
-            src="/new-black.png"
+            src="/Image/new-black.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
@@ -32,7 +32,7 @@ const Logo = () => {
       ) : (
         <>
           <Image
-            src="/new-black.png"
+            src="/Image/new-black.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
@@ -40,7 +40,7 @@ const Logo = () => {
             suppressHydrationWarning
           />
           <Image
-            src="/new-white.png"
+            src="/Image/new-white.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
