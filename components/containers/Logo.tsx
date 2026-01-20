@@ -13,7 +13,7 @@ const Logo = () => {
       {isHomePage ? (
         <>
           <Image
-            src="/new-white.png"
+            src="/Image/new-white.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
