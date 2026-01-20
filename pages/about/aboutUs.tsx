@@ -19,7 +19,7 @@ const montserrat = Montserrat({
 
 const page = () => {
   return (
-    <div className="min-h-screen bg-[url('/Image/light.jpg')] dark:bg-[url('/dark.jpg')] md:bg-cover overflow-hidden ">
+    <div className="min-h-screen bg-[url('/Image/light.jpg')] dark:bg-[url('/Image/dark.jpg')] md:bg-cover overflow-hidden ">
       <NavBar />
       <div
         className={` ${montserrat} flex flex-col justify-center items-center`}
