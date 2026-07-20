@@ -121,7 +121,7 @@ console.log("current sort:", sort);
             <select
   value={sort}
   onChange={(e) => {
-    console.log("sort changed to:", e.target.value);
+    // console.log("sort changed to:", e.target.value);
     setSort(e.target.value);
     setPage(1);
   }}

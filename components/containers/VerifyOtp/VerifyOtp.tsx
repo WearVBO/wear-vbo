@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import api from "@/lib/axios";
@@ -13,7 +13,12 @@ type VerifyOtpFormData = {
 const VerifyOtp = () => {
   const router = useRouter();
   // const searchParms = useSearchParams();
-  const email = localStorage.getItem("resetEmail") || "";
+  // const email = localStorage.getItem("resetEmail") || "";
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    setEmail(localStorage.getItem("resetEmail") || "")
+  }, [])
 
   const {
     register,
