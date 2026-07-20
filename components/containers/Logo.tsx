@@ -12,27 +12,27 @@ const Logo = () => {
     <div>
       {isHomePage ? (
         <>
-          <Image
-            src="/new-white.png"
+          {/* <Image
+            src="/Image/new-white.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
             className="block max-xl:hidden dark:block max-xl:dark:hidden w-[60px] mt-3 cursor-pointer"
             suppressHydrationWarning
-          />
+          /> */}
           <Image
-            src="/new-black.png"
+            src="/Image/new-black.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
-            className="block xl:hidden cursor-pointer w-[60px] dark:hidden mt-3 max-xl:dark:block"
-            suppressHydrationWarning
+            className="block xl:hidden cursor-pointer w-[60px]  mt-3 "
+            // suppressHydrationWarning
           />
         </>
       ) : (
         <>
           <Image
-            src="/new-black.png"
+            src="/Image/new-black.png"
             alt="WearVbo Logo"
             width={80}
             height={50}
@@ -40,7 +40,7 @@ const Logo = () => {
             suppressHydrationWarning
           />
           <Image
-            src="/new-white.png"
+            src="/Image/new-white.png"
             alt="WearVbo Logo"
             width={80}
             height={50}

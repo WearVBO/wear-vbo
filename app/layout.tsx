@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+
 import { Geist, Geist_Mono } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+// import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
-import Header from "@/components/Header";
-import AOSInit from "@/components/AOSInit"
+// import NavBar from "@/components/containers/Navbar/NavBar";
+import DesktopNav from "@/components/containers/Navbar/DesktopNav";
+import MobileNav from "@/components/containers/Navbar/MobileNav";
+// import Header from "@/components/containers/Header";
+import AOSInit from "@/components/containers/AOSInit";
+import Footer from "@/components/containers/Footer/Footer";
+import GuestSessionInit from "@/components/containers/GuestSessionInit";
+import {Toaster} from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,20 +33,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
-        <div className="hidden   ">
-        <NavBar />
+        {/* <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+        > */}
+        <GuestSessionInit />
+        <Toaster position="top-right" />
+        <div className="hidden md:block">
+          <DesktopNav />
         </div>
-        <div className="w-full max-w-[1130px]  mx-auto">
-          <Header />
+        <div className="md:hidden">
+          <MobileNav />
         </div>
+        {/* <div className="w-full max-w-[1130px]  mx-auto">
+
+            <Header />
+          </div> */}
         <AOSInit />
+        <div className="max-w-[1440px] mx-auto">
         {children}
-        </ThemeProvider>
+          <Footer />
+        </div>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );
