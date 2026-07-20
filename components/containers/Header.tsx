@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import NavItems from "@/components/containers/NavItems";
+import NavItems from "@/components/containers/Navbar/NavItems";
 
 const Header = () => {
   return (
