@@ -13,7 +13,7 @@ export const getGuestSession = async (): Promise<string> => {
       const isExpired = payload.exp * 1000 < Date.now();
 
       if (isExpired) {
-        console.log("Guest token expired, creating new one...");
+        // console.log("Guest token expired, creating new one...");
         localStorage.removeItem("guestToken");
         localStorage.removeItem("guestId");
         guestToken = null;

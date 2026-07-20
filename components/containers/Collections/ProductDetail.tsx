@@ -81,9 +81,9 @@ const ProductDetail = ({ productId }: { productId: string }) => {
       : null,
     fetcher,
   );
-  console.log("fetching:", `/api/product/get-single-product/${productId}`);
-  console.log("data", data);
-  console.log("error", error);
+  // console.log("fetching:", `/api/product/get-single-product/${productId}`);
+  // console.log("data", data);
+  // console.log("error", error);
   const product: Product = data?.data?.find(
     (p: Product) => p._id === productId,
   );

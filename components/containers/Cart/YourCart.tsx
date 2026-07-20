@@ -104,7 +104,7 @@ const YourCart = () => {
       })
     }
     mutate();
-  }, [cartItems])
+  }, [cartItems, mutate])
 
   const increaseQuantity = (itemId: string) => {
     setQuantities(prev => {
@@ -127,18 +127,7 @@ const YourCart = () => {
     { name: "Cart", path: "/cart" },
   ];
 
-  // const { items, addItem, increaseQuantity, decreaseQuantity, removeItem } =
 
-  //   useCartStore();
-
-  // useEffect(() => {
-  //   if (items.length === 0) {
-  //     dummyItems.forEach((item) => addItem(item));
-  //   }
-  // }, [items.length, addItem]);
-
-  // remove when backend is ready
-  // const displayItems = items.length > 0 ? items : dummyItems;
 
   const handleRemoveItem = async (productId: string) => {
     try {

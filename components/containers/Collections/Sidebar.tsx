@@ -37,11 +37,7 @@ const Sidebar = ({
   const [showColors, setShowColors] = useState(true);
   const [showSizes, setShowSizes] = useState(true);
 
-  const handleClearAll = () => {
-    onCategoryChange("");
-    selectedColors.forEach(color=> onColorChange(color));
-    selectedSizes.forEach(size => onSizeChange(size))
-  }
+
 // const searchParams = useSearchParams();
 // const categoryParam = searchParams?.get("category");
   return (

@@ -8,13 +8,7 @@ import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/containers/Collections/ProductCard";
 import Sidebar from "@/components/containers/Collections/Sidebar";
 import { CollectionsPagination } from "./Pagination";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+
 
 interface Product {
   _id: string;
@@ -56,15 +50,7 @@ const CollectionsPage = () => {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("newest");
 
-  // const buildUrl = () => {
-  //   const params = new URLSearchParams();
-  //   if (categoryParam) params.set("collections", categoryParam);
-  //   if (searchParam) params.set("search", searchParam);
-  //   params.set("page", page.toString());
-  //   params.set("limit", "9");
-  //   params.set("sort", sort);
-  //   return `/api/product/get-products?${params.toString()}`;
-  // };
+
 
  const url = `/api/product/get-products?page=${page}&limit=9&sort=${sort}${categoryParam ? `&collections=${categoryParam}` : ""}${searchParam ? `&search=${searchParam}` : ""}`;
 const { data, isLoading, error } = useSWR(url, fetcher, {
@@ -73,12 +59,7 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
 
 console.log("current sort:", sort);
 
-  // const { data, isLoading, error } = useSWR(
-    // buildUrl(),
-    // `/api/product/get-products?page=${page}&limit=9${categoryParam ? `?collections=${categoryParam}` : ""}`,
-    // fetcher,
-    // { revalidateOnFocus: false },
-  // );
+
 
   const totalPages = data?.data?.totalPages || 1;
   const allProducts: Product[] = data?.data?.data || [];
@@ -105,10 +86,10 @@ console.log("current sort:", sort);
     );
   };
 
-  console.log("selectedSizes:", selectedSizes);
-console.log("filteredProducts:", filteredProducts.length);
-console.log("allProducts:", allProducts.length);
-console.log("url:", url);
+//   console.log("selectedSizes:", selectedSizes);
+// console.log("filteredProducts:", filteredProducts.length);
+// console.log("allProducts:", allProducts.length);
+// console.log("url:", url);
 
 
   return (
