@@ -57,7 +57,7 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
   revalidateOnFocus: false,
 });
 
-console.log("current sort:", sort);
+// console.log("current sort:", sort);
 
 
 
