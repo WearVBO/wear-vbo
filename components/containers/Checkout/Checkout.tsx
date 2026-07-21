@@ -87,7 +87,7 @@ const Checkout = () => {
   ];
 
   const onSubmit = async (data: CheckoutFormData) => {
-    // Here you would typically send the data to your backend or a payment gateway
+   // send the data to the  payment gateway
     console.log("Checkout Data:", data);
   };
   return (

@@ -3,6 +3,17 @@ import React from "react";
 import useSWR from "swr";
 import api from "@/lib/axios";
 
+interface CartItem {
+  _id: string;
+  productId: {
+    _id: string;
+    productName: string;
+    productPrice: number;
+    productImages: { url: string; publicId: string; _id: string }[];
+  };
+  quantity: number;
+}
+
 const fetcher = async (url: string) => {
   const token = localStorage.getItem("token");
   const guestToken = localStorage.getItem("guestToken");
@@ -16,31 +27,31 @@ const fetcher = async (url: string) => {
 
 const OrderSummary = () => {
   const { data, isLoading, error } = useSWR("/api/cart/get-cart", fetcher);
-  const cartItems = data?.items || [];
+  const cartItems: CartItem[] = data?.cart?.items || data?.cart || [];
 
   const subtotal = cartItems.reduce(
-    (acc: number, item: { price: number; quantity: number }) =>
-      acc + item.price * item.quantity,
+    (acc: number, item: CartItem) =>
+      acc + item.productId.productPrice * item.quantity,
     0,
   );
-  const discount = Math.round(subtotal * 0.2);
-  const deliveryFee = 15;
-  const total = subtotal - discount + deliveryFee;
+  // const discount = Math.round(subtotal * 0.2);
+  const deliveryFee = 1500;
+  const total = subtotal  + deliveryFee;
 
   const summaryItems = [
     {
       label: "Subtotal",
-      value: `$${subtotal.toFixed(2)}`,
+      value: `₦${subtotal.toLocaleString()}`,
       style: "text-black",
     },
-    {
-      label: "Discount (20%)",
-      value: `-$${discount.toFixed(2)}`,
-      style: "text-red-500",
-    },
+    // {
+    //   label: "Discount (20%)",
+    //   value: `-$${discount.toFixed(2)}`,
+    //   style: "text-red-500",
+    // },
     {
       label: "Delivery Fee",
-      value: `$${deliveryFee.toFixed(2)}`,
+      value: `₦${deliveryFee.toLocaleString()}`,
       style: "text-black",
     },
     // { label: "Total", value: `$${total.toFixed(2)}`, isTotal: true },
@@ -49,19 +60,22 @@ const OrderSummary = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Please login to view your cart</div>;
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      {/* items */}
       <div className="flex flex-col gap-4">
         {cartItems.map(
           (
-            item: { id: number; name: string; price: number; quantity: number },
+            item: CartItem,
             index: number,
           ) => (
             <div key={index} className="flex justify-between text-sm">
               <span>
-                {item.name} x{item.quantity}
+                {item.productId.productName} x{item.quantity}
               </span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>₦{(item.productId.productPrice * item.quantity).toLocaleString()}</span>
             </div>
+
+
           ),
         )}
       </div>
@@ -83,7 +97,7 @@ const OrderSummary = () => {
       {/* total */}
       <div className="flex justify-between text-lg font-bold">
         <span>Total</span>
-        <span>${total.toFixed(2)}</span>
+        <span>₦{total.toLocaleString()}</span>
       </div>
     </div>
   );

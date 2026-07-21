@@ -6,7 +6,7 @@ interface ProductDetailProps {
 }
 
 const productDetail = ({productId}: ProductDetailProps) => {
-  // console.log("productId in page:", productId); // ← add this
+  // console.log("productId in page:", productId); // 
   return (
     <div>
       <ProductDetail productId={productId} />
