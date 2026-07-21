@@ -55,7 +55,7 @@ const ProductCard = ({ product }: { product: ProductCardProps }) => {
       const token = localStorage.getItem("token");
       const guestToken = localStorage.getItem("guestToken");
       const authToken = token || guestToken;
-      // if (token) {
+      
         //logged in user
         await api.post(
           "/api/cart/add-cart",
@@ -70,24 +70,7 @@ const ProductCard = ({ product }: { product: ProductCardProps }) => {
           },
         );
         toast.success("Added to cart!")
-      // }
-      //  else {
-        //guest user
-        // const guestToken = await getGuestSession();
-        // await api.post(
-        //   "/api/cart/add-cart",
-        //   {
-        //     productId: product._id,
-        //     quantity: 1,
-        //   },
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${guestToken}`,
-        //     },
-        //   },
-        // );
-        // alert("Added to cart!")
-      // }
+    
     } catch (error) {
       console.error("Failed to add to cart", error);
       alert("Failed to add to cart. Please try again.")
@@ -175,7 +158,7 @@ const ProductCard = ({ product }: { product: ProductCardProps }) => {
       <div className="flex flex-col gap-2">
         <h3 className="font-bold text-lg">{product.productName}</h3>
         <StarRating rating={product.ratings} />
-        <p className="text-xl font-bold">₦{product.productPrice}</p>
+        <p className="text-xl font-bold">₦{product.productPrice.toLocaleString()}</p>
         {/* <p className="text-gray-500">{product.description}</p> */}
       </div>
     </Link>

@@ -40,35 +40,7 @@ const fetcher = async (url: string) => {
   return response.data;
 };
 
-// const dummyItems: CartItem[] = [
-//   {
-//     id: "1",
-//     name: "Gradient Graphic T-shirt",
-//     size: "Large",
-//     color: "White",
-//     price: 145,
-//     quantity: 1,
-//     image: "",
-//   },
-//   {
-//     id: "2",
-//     name: "Checkered Shirt",
-//     size: "Medium",
-//     color: "Red",
-//     price: 180,
-//     quantity: 1,
-//     image: "",
-//   },
-//   {
-//     id: "3",
-//     name: "Skinny Fit Jeans",
-//     size: "Large",
-//     color: "Blue",
-//     price: 240,
-//     quantity: 1,
-//     image: "",
-//   },
-// ];
+
 
 const YourCart = () => {
   const pathname = usePathname();
@@ -157,14 +129,14 @@ const YourCart = () => {
     (acc, item) => acc + item.productId.productPrice * (quantities[item._id] || 1), 
     0,
   );
-  const discount = Math.round(subtotal * 0.2);
-  const deliveryFee = 15;
-  const total = subtotal - discount + deliveryFee;
+  // const discount = Math.round(subtotal * 0.2);
+  const deliveryFee = 1500;
+  const total = subtotal  + deliveryFee;
 
   const summaryItems = [
-    { label: "Subtotal", value: `$${subtotal}`, style: "text-black" },
-    { label: "Discount (-20%)", value: `-$${discount}`, style: "text-red-500" },
-    { label: "Delivery Fee", value: `$${deliveryFee}`, style: "text-black" },
+    { label: "Subtotal", value: `₦${subtotal.toLocaleString()}`, style: "text-black" },
+    // { label: "Discount (-20%)", value: `-₦${discount}`, style: "text-red-500" },
+    { label: "Delivery Fee", value: `₦${deliveryFee.toLocaleString()}`, style: "text-black" },
   ];
   // const isHomePage = pathname === "/";
 
@@ -234,7 +206,7 @@ const YourCart = () => {
                     Color: {item.productId.availableColors}
                   </p>
                   <p className="font-bold mt-1">
-                    ${(item.productId.productPrice * (quantities[item._id] || 1)).toFixed(2)}
+                    ₦{(item.productId.productPrice * (quantities[item._id] || 1)).toLocaleString()}
                   </p>
                 </div>
                 {/* Quantity */}
@@ -283,7 +255,7 @@ const YourCart = () => {
 
           <div className="flex justify-between font-bold">
             <span>Total</span>
-            <span>${total}</span>
+            <span>${total.toLocaleString()}</span>
           </div>
 
           <button
