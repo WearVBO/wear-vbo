@@ -2,22 +2,13 @@
 import { useEffect } from "react";
 import { getGuestSession } from "@/lib/guestSession";
 
+/**
+ * Bootstraps the guest id on first visit. Shopping is public, so this runs
+ * for everyone — the id is what identifies the cart from here on.
+ */
 const GuestSessionInit = () => {
   useEffect(() => {
-    const init = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          // always call getGuestSession — it handles expiry internally
-          await getGuestSession();
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error("Guest session failed:", error.message);
-        }
-      }
-    };
-    init();
+    getGuestSession();
   }, []);
 
   return null;

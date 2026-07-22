@@ -1,13 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { IoClose } from "react-icons/io5";
+import useSWR from "swr";
+import { getCategories } from "@/services/catalog.service";
+import type { Category } from "@/lib/types";
 // import {useSearchParams} from "next/navigation";
-
-const categories = [
-  { name: "Women", tag: "female", subcategories: ["Tops", "Bottoms"] },
-  { name: "Men", tag: "male", subcategories: ["Shirts", "Shorts"] },
-  { name: "Unisex", tag: "unisex", subcategories: ["Hoodies", "Sweatshirts"] },
-];
 
 const colors = ["green", "red", "yellow", "orange", "blue", "purple", "pink", "white", "black"];
 const sizes = ["XX-Small", "X-Small", "Small", "Medium", "Large", "X-Large", "XX-Large", "3X-Large", "4X-Large"];
@@ -33,7 +30,6 @@ const Sidebar = ({
   onColorChange,
   onSizeChange,
 }: SidebarProps) => {
-  const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [showColors, setShowColors] = useState(true);
   const [showSizes, setShowSizes] = useState(true);
 
@@ -51,8 +47,6 @@ const Sidebar = ({
           onCategoryChange={onCategoryChange}
           onColorChange={onColorChange}
           onSizeChange={onSizeChange}
-          openCategory={openCategory}
-          setOpenCategory={setOpenCategory}
           showColors={showColors}
           setShowColors={setShowColors}
           showSizes={showSizes}
@@ -75,8 +69,6 @@ const Sidebar = ({
               onCategoryChange={onCategoryChange}
               onColorChange={onColorChange}
               onSizeChange={onSizeChange}
-              openCategory={openCategory}
-              setOpenCategory={setOpenCategory}
               showColors={showColors}
               setShowColors={setShowColors}
               showSizes={showSizes}
@@ -97,8 +89,6 @@ interface SidebarContentProps {
   onCategoryChange: (category: string) => void;
   onColorChange: (color: string) => void;
   onSizeChange: (size: string) => void;
-  openCategory: string | null;
-  setOpenCategory: (category: string | null) => void;
   showColors: boolean;
   setShowColors: (show: boolean) => void;
   showSizes: boolean;
@@ -112,13 +102,16 @@ const SidebarContent = ({
   onCategoryChange,
   onColorChange,
   onSizeChange,
-  openCategory,
-  setOpenCategory,
   showColors,
   setShowColors,
   showSizes,
   setShowSizes,
 }: SidebarContentProps) => {
+  const { data } = useSWR("/api/category", async () => (await getCategories()).data, {
+    revalidateOnFocus: false,
+  });
+  const categories: Category[] = data || [];
+
   return (
     
     
@@ -153,25 +146,13 @@ const SidebarContent = ({
             All
           </button>
           {categories.map((cat) => (
-            <div key={cat.name}>
-              <button
-                onClick={() => {
-                  onCategoryChange(cat.tag);
-                  setOpenCategory(openCategory === cat.name ? null : cat.name);
-                }}
-                className={`w-full text-left text-sm py-1 flex items-center justify-between ${selectedCategory === cat.tag ? "font-bold text-black" : "text-gray-500 hover:text-black"}`}
-              >
-                {cat.name}
-                <span>{openCategory === cat.name ? "−" : "+"}</span>
-              </button>
-              {openCategory === cat.name && (
-                <div className="pl-4 flex flex-col gap-1 mt-1">
-                  {cat.subcategories.map((sub: string) => (
-                    <span key={sub} className="text-xs text-gray-400">{sub}</span>
-                  ))}
-                </div>
-              )}
-            </div>
+            <button
+              key={cat._id}
+              onClick={() => onCategoryChange(cat._id)}
+              className={`w-full text-left text-sm py-1 ${selectedCategory === cat._id ? "font-bold text-black" : "text-gray-500 hover:text-black"}`}
+            >
+              {cat.name}
+            </button>
           ))}
         </div>
       </div>

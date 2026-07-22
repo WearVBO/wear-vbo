@@ -1,43 +1,26 @@
 import useSWR from "swr";
 import api from "@/lib/axios";
-import { getGuestSession } from "@/lib/guestSession";
-import axios from "axios";
-
-const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
-  let guestToken = localStorage.getItem("guestToken");
-
-  if (!token) {
-    guestToken = await getGuestSession();
-  }
-
-  const authToken = token || guestToken;
-
-  try {
-    return api
-      .get(url, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      })
-      .then((res) => res.data);
-  } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.status === 401 && token) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
-    return null;
-  }
-};
+import { useCart } from "@/hooks/useCart";
 
 export const useCartCount = () => {
-  const { data } = useSWR("/api/cart/get-cart", fetcher, {
-    revalidateOnFocus: false,
+  const { itemCount } = useCart();
+  return itemCount;
+};
+
+// Favorites is still a user-account feature, so it keeps the user token.
+const favoritesFetcher = async (url: string) => {
+  const token =
+    typeof window === "undefined" ? "" : localStorage.getItem("token") || "";
+  if (!token) return null;
+
+  const response = await api.get(url, {
+    headers: { Authorization: `Bearer ${token}` },
   });
-  const cart = data?.cart?.items || data?.cart || [];
-  return cart.length;
+  return response.data;
 };
 
 export const useFavoritesCount = () => {
-  const { data } = useSWR("/api/favorites", fetcher, {
+  const { data } = useSWR("/api/favorites", favoritesFetcher, {
     revalidateOnFocus: false,
   });
   return data?.data?.length || 0;

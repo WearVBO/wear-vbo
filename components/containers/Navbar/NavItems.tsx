@@ -56,6 +56,10 @@ export const NavLinks = [
     name: "Contact",
     path: "/contact",
   },
+  {
+    name: "Track Order",
+    path: "/track-order",
+  },
   // {
   //   name: "Cart",
   //   path: "/cart",

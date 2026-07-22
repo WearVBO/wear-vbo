@@ -1,157 +1,104 @@
 "use client";
-import React, {useState, useEffect, useMemo} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-// import { useCartStore } from "@/store/cartStore";
-// import { CartItem } from "@/store/cartStore";
-// import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import useSWR from "swr";
-import api from "@/lib/axios";
-
-interface CartProduct {
-  _id: string;
-  productName: string;
-  productPrice: number;
-  productImages: { url: string; publicId: string; _id: string }[];
-  size: string;
-  availableColors: string[];
-}
-
-interface CartItem {
-  _id: string;
-  productId: CartProduct;
-  quantity: number;
-}
-
-const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
-  const guestToken = localStorage.getItem("guestToken");
-  const authToken = token || guestToken;
-
-  const response = await api.get(url, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
-  });
-  return response.data;
-};
-
-
+import toast from "react-hot-toast";
+import { useCart } from "@/hooks/useCart";
+import { cartLineKey, type CartItem } from "@/lib/types";
+import {
+  clearCart,
+  removeCartItem,
+  updateCartItem,
+} from "@/services/cart.service";
+import { getApiErrorMessage } from "@/lib/apiClient";
+import { CartSkeleton } from "@/components/containers/skeletons";
 
 const YourCart = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const { items, subtotal, unavailableItems, isLoading, error, mutate } =
+    useCart();
 
-   const { data, isLoading, error, mutate } = useSWR(
-    "/api/cart/get-cart",
-    fetcher,
-    {
-      revalidateOnFocus: false,
-    },
-  );
-
-  const [quantities, setQuantities] = useState<{[key: string] : number}>(() => {
-    if (typeof window === "undefined") return {};
-    const saved = localStorage.getItem("cartQuantities");
-    return saved ? JSON.parse(saved) : {};
-  })
-
-  const cartItems: CartItem[] = useMemo(() => data?.cart?.items || data?.cart || [], [data]);
-  //sync
-  useEffect(() => {
-    if(cartItems.length > 0) {
-      setQuantities(prev => {
-        const updated = {...prev};
-        cartItems.forEach(item => {
-          if(!updated[item._id]) {
-            updated[item._id] = item.quantity;
-          }
-        })
-        localStorage.setItem("cartQuantities", JSON.stringify(updated));
-        return updated;
-      })
-    }
-    mutate();
-  }, [cartItems, mutate])
-
-  const increaseQuantity = (itemId: string) => {
-    setQuantities(prev => {
-      const updated = {...prev, [itemId]: (prev[itemId] || 1) + 1};
-      localStorage.setItem("cartQuantities", JSON.stringify(updated))
-      return updated;
-    });
-  };
-
-    const decreaseQuantity = (itemId: string) => {
-    setQuantities(prev => {
-      const updated = {...prev, [itemId]: Math.max(1, (prev[itemId] || 1) - 1)};
-      localStorage.setItem("cartQuantities", JSON.stringify(updated))
-      return updated;
-    });
-  };
+  // per-line inline error, e.g. the 409 "Only 3 unit(s) available"
+  const [lineErrors, setLineErrors] = useState<Record<string, string>>({});
+  const [pendingLine, setPendingLine] = useState<string | null>(null);
 
   const links = [
     { name: "Home", path: "/" },
     { name: "Cart", path: "/cart" },
   ];
 
+  const setLineError = (key: string, message: string | null) =>
+    setLineErrors((prev) => {
+      const next = { ...prev };
+      if (message) next[key] = message;
+      else delete next[key];
+      return next;
+    });
 
-
-  const handleRemoveItem = async (productId: string) => {
+  const handleQuantityChange = async (item: CartItem, quantity: number) => {
+    if (quantity < 0) return;
+    const key = cartLineKey(item);
+    setPendingLine(key);
+    setLineError(key, null);
     try {
-      const token = localStorage.getItem("token");
-      const guestToken = localStorage.getItem("guestToken");
-      const authToken = token || guestToken;
+      // quantity 0 removes the line
+      const response = await updateCartItem(
+        item.productId,
+        quantity,
+        item.variantId,
+      );
+      mutate(response.data, { revalidate: false });
+    } catch (err) {
+      setLineError(key, getApiErrorMessage(err, "Could not update quantity."));
+    } finally {
+      setPendingLine(null);
+    }
+  };
 
-      await api.delete(`/api/cart/delete-cart/${productId}`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
-      mutate(); // Re-fetch the cart data after deletion
-    } catch (error) {
-      console.error("Failed to remove item from cart", error);
+  const handleRemoveItem = async (item: CartItem) => {
+    const key = cartLineKey(item);
+    setPendingLine(key);
+    try {
+      const response = await removeCartItem(item.productId, item.variantId);
+      mutate(response.data, { revalidate: false });
+      setLineError(key, null);
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Failed to remove item."));
+    } finally {
+      setPendingLine(null);
+    }
+  };
+
+  const handleClearCart = async () => {
+    try {
+      await clearCart();
+      setLineErrors({});
+      mutate();
+    } catch (err) {
+      toast.error(getApiErrorMessage(err, "Failed to clear cart."));
     }
   };
 
   const handleCheckout = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login?redirect=/checkout");
-    } else {
-      router.push("/checkout");
+    if (unavailableItems.length > 0) {
+      toast.error("Remove the unavailable items before checking out");
+      return;
     }
+    router.push("/checkout");
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.productId.productPrice * (quantities[item._id] || 1), 
-    0,
-  );
-  // const discount = Math.round(subtotal * 0.2);
-  const deliveryFee = 1500;
-  const total = subtotal  + deliveryFee;
-
-  const summaryItems = [
-    { label: "Subtotal", value: `₦${subtotal.toLocaleString()}`, style: "text-black" },
-    // { label: "Discount (-20%)", value: `-₦${discount}`, style: "text-red-500" },
-    { label: "Delivery Fee", value: `₦${deliveryFee.toLocaleString()}`, style: "text-black" },
-  ];
-  // const isHomePage = pathname === "/";
-
-  if (isLoading)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+  if (isLoading) return <CartSkeleton />;
   if (error)
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
-        Failed to load cart
+        {getApiErrorMessage(error, "Failed to load cart")}
       </div>
     );
+
   return (
     <section className="px-4 md:px-10 pt-4 pb-10 md:pt-10">
       {/* breadcrumb */}
@@ -174,98 +121,146 @@ const YourCart = () => {
         })}
       </div>
 
-      {/* main cart */}
+      <div className="flex items-center justify-between mt-4 md:mt-2">
+        <h1 className="font-bold uppercase text-3xl">Your Cart</h1>
+        {items.length > 0 && (
+          <button
+            onClick={handleClearCart}
+            className="text-sm text-red-500 hover:underline"
+          >
+            Clear cart
+          </button>
+        )}
+      </div>
 
-      <h1 className="font-bold uppercase text-3xl mt-4 md:mt-2">Your Cart</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* cart Items */}
-        <div className="md:col-span-2 flex flex-col gap-4 border rounded-xl mt-4">
-          {cartItems.map((item, index) => (
-            <React.Fragment key={item._id}>
-              <div className="flex items-center gap-4  p-4">
-                <div className="w-20 h-20 rounded-lg bg-gray-200 flex-shrink-0 overflow-hidden relative ">
-                  {item.productId.productImages[0].url ? (
-                    <Image
-                      src={item.productId.productImages[0]?.url || ""}
-                      alt={item.productId.productName}
-                      fill
-                      className="object-cover "
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-300 animate-pulse" />
-                  )}
-                </div>
-
-                {/* Details */}
-                <div className="flex-1">
-                  <p className="font-semibold">{item.productId.productName}</p>
-                  <p className="text-sm text-gray-500">
-                    Size: {item.productId.size}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Color: {item.productId.availableColors}
-                  </p>
-                  <p className="font-bold mt-1">
-                    ₦{(item.productId.productPrice * (quantities[item._id] || 1)).toLocaleString()}
-                  </p>
-                </div>
-                {/* Quantity */}
-                <div className="flex flex-col items-center">
-                  <div className="mb-4">
-                    <button onClick={() => handleRemoveItem(item.productId._id)}>
-                      <RiDeleteBin5Line className="text-red-500 text-lg" />
-                    </button>
-                  </div>
-                  <div className="flex items-center gap-2 border rounded-full px-3 py-1">
-                    <button
-                      onClick={() => decreaseQuantity(item._id)}
-                      className="text-lg"
-                    >
-                      −
-                    </button>
-                    <span>{quantities[item._id] || 1}</span>
-                    <button
-                      onClick={() => increaseQuantity(item._id)}
-                      className="text-lg"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              </div>
-              {index < cartItems.length - 1 && <hr className="mx-4" />}
-            </React.Fragment>
-          ))}
+      {items.length === 0 ? (
+        <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+          <p className="text-gray-500 text-lg">Your cart is empty.</p>
+          <Link
+            href="/collections"
+            className="bg-black text-white px-6 py-3 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors"
+          >
+            Browse Collections
+          </Link>
         </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* cart items */}
+          <div className="md:col-span-2 flex flex-col gap-4 border rounded-xl mt-4">
+            {items.map((item, index) => {
+              const key = cartLineKey(item);
+              const unavailable = !item.inStock || !item.isActive;
+              return (
+                <React.Fragment key={key}>
+                  <div className="flex items-center gap-4 p-4">
+                    <div className="w-20 h-20 rounded-lg bg-gray-200 flex-shrink-0 overflow-hidden relative">
+                      {item.image ? (
+                        <Image
+                          src={item.image}
+                          alt={item.productName}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-300 animate-pulse" />
+                      )}
+                    </div>
 
-        {/* summary */}
-        <div className="border rounded-xl p-6 h-fit flex flex-col gap-4">
-          <h2 className="text-xl font-bold">Order Summary</h2>
-          {summaryItems.map((item, index) => (
-            <div
-              key={index}
-              className={`flex justify-between text-sm ${item.style}`}
-            >
-              <span>{item.label}</span>
-              <span>{item.value}</span>
-            </div>
-          ))}
+                    {/* details */}
+                    <div className="flex-1">
+                      <p className="font-semibold">{item.productName}</p>
+                      {item.attributes?.size && (
+                        <p className="text-sm text-gray-500">
+                          Size: {item.attributes.size}
+                        </p>
+                      )}
+                      {item.attributes?.color && (
+                        <p className="text-sm text-gray-500">
+                          Color: {item.attributes.color}
+                        </p>
+                      )}
+                      <p className="font-bold mt-1">
+                        ₦{item.lineTotal.toLocaleString()}
+                      </p>
+                      {unavailable && (
+                        <span className="inline-block mt-1 text-xs font-semibold text-red-600 bg-red-50 px-2 py-0.5 rounded">
+                          {item.isActive ? "Out of stock" : "Unavailable"}
+                        </span>
+                      )}
+                      {lineErrors[key] && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {lineErrors[key]}
+                        </p>
+                      )}
+                    </div>
 
-          <hr />
-
-          <div className="flex justify-between font-bold">
-            <span>Total</span>
-            <span>${total.toLocaleString()}</span>
+                    {/* quantity */}
+                    <div className="flex flex-col items-center">
+                      <div className="mb-4">
+                        <button onClick={() => handleRemoveItem(item)}>
+                          <RiDeleteBin5Line className="text-red-500 text-lg" />
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-2 border rounded-full px-3 py-1">
+                        <button
+                          disabled={pendingLine === key}
+                          onClick={() =>
+                            handleQuantityChange(item, item.quantity - 1)
+                          }
+                          className="text-lg disabled:text-gray-300"
+                        >
+                          −
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          disabled={pendingLine === key}
+                          onClick={() =>
+                            handleQuantityChange(item, item.quantity + 1)
+                          }
+                          className="text-lg disabled:text-gray-300"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {index < items.length - 1 && <hr className="mx-4" />}
+                </React.Fragment>
+              );
+            })}
           </div>
 
-          <button
-            onClick={handleCheckout}
-            className="w-full bg-black text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors text-center block"
-          >
-            Go to Checkout
-          </button>
+          {/* summary — every money value comes from the server */}
+          <div className="border rounded-xl p-6 h-fit flex flex-col gap-4">
+            <h2 className="text-xl font-bold">Order Summary</h2>
+
+            <div className="flex justify-between text-sm">
+              <span>Subtotal</span>
+              <span>₦{subtotal.toLocaleString()}</span>
+            </div>
+
+            <p className="text-xs text-gray-500">
+              Delivery, discounts and taxes are calculated at checkout.
+            </p>
+
+            <hr />
+
+            {unavailableItems.length > 0 && (
+              <p className="text-sm text-red-500">
+                Remove the unavailable items above to continue.
+              </p>
+            )}
+
+            <button
+              onClick={handleCheckout}
+              disabled={unavailableItems.length > 0}
+              className="w-full bg-black text-white py-3 rounded-full font-semibold hover:bg-gray-800 transition-colors text-center block disabled:bg-gray-300 disabled:cursor-not-allowed"
+            >
+              Go to Checkout
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };
