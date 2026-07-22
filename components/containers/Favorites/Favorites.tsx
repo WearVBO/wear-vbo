@@ -4,6 +4,7 @@ import useSWR from "swr";
 import api from "@/lib/axios";
 import Link from "next/link";
 import ProductCard from "@/components/containers/Collections/ProductCard";
+import { FavoritesSkeleton } from "@/components/containers/skeletons";
 
 interface FavoriteItem {
   _id: string;
@@ -23,16 +24,13 @@ interface FavoriteItem {
   updatedAt: string;
 }
 
+// Favorites is still account-scoped, so it keeps the user token.
 const fetcher = async (url: string) => {
   const token = localStorage.getItem("token");
-  const guestToken = localStorage.getItem("guestToken");
-  const authToken = token || guestToken;
-  console.log("Auth Token:", authToken); // Log the auth token for debugging
+  if (!token) return null;
 
   const response = await api.get(url, {
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
 };
@@ -43,12 +41,7 @@ const Favorites = () => {
   });
   const favorites = data?.data || [];
 
-  if (isLoading)
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+  if (isLoading) return <FavoritesSkeleton />;
 
   if (error)
     return (

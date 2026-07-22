@@ -51,21 +51,16 @@ const Login = () => {
   const redirectTo = searchParams?.get("redirect") || "/cart";
 
   const onSubmit = async (data: LoginFormData) => {
-    const guestToken = localStorage.getItem("guestToken");
-
     const payload = {
       email: data.email,
       password: data.password,
-      ...(guestToken && {guestToken}),
     }
     try {
       const response = await api.post("/api/auth/login", payload);
 
       // save user token to localStorage
       localStorage.setItem("token", response.data.data.token);
-      localStorage.removeItem("guestToken"); // remove guest token after successful login
       router.push(redirectTo);
-      console.log("Login successful:", response.data);
     } catch (error) {
       console.error("Login failed:", error);
     }
