@@ -4,6 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* brand gold, already used across the storefront nav + CTAs */
+  --color-brand: #eeb62a;
+  --color-brand-soft: #fdf4e0;
+  --color-brand-dark: #c9930f;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
