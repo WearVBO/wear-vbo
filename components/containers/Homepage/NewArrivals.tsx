@@ -1,50 +1,36 @@
 "use client";
 import React from "react";
 import useSWR from "swr";
-import api from "@/lib/axios";
 import Link from "next/link";
 import ProductCard from "@/components/containers/Collections/ProductCard";
-import { getGuestSession } from "@/lib/guestSession";
-
-interface Product {
-  _id: string;
-  productName: string;
-  productPrice: number;
-  ratings: number;
-  sizes: string[];
-  tags: string[];
-  availableColors: string[];
-  productImages: { url: string; publicId: string; _id: string }[];
-  isSoldOut: boolean;
-}
-
-const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
-  let guestToken = localStorage.getItem("guestToken");
-
-  if (!token) {
-    guestToken = await getGuestSession();
-  }
-
-  const authToken = token || guestToken;
-
-  const response = await api.get(url, {
-    headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
-  });
-  return response.data;
-};
+import { buildProductUrl, getProducts } from "@/services/product.service";
+import { ProductGridSkeleton } from "@/components/containers/skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { Product } from "@/lib/types";
 
 const NewArrivals = () => {
   const { data, isLoading, error } = useSWR(
-    "/api/product/get-products?sort=newest&limit=4",
-    fetcher,
+    buildProductUrl({ sort: "newest", limit: 4 }),
+    getProducts,
     { revalidateOnFocus: false },
   );
 
   const products: Product[] = data?.data?.data || [];
 
-  if (isLoading) return <div className="text-center py-10">Loading...</div>;
   if (error) return null;
+
+  if (isLoading)
+    return (
+      <section className="px-4 md:px-8 py-10">
+        <div className="flex justify-center mb-6">
+          <Skeleton className="h-10 w-56" />
+        </div>
+        <ProductGridSkeleton
+          count={4}
+          className="grid grid-cols-2 gap-4 md:grid-cols-4"
+        />
+      </section>
+    );
 
   return (
     <section className="px-4 md:px-8 py-10">

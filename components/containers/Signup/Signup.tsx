@@ -60,19 +60,14 @@ const Signup = () => {
   } = useForm<RegisterFormData>();
 
   const onSubmit = async (data: RegisterFormData) => {
-    const guestToken = localStorage.getItem("guestToken");
-
     const payload = {
       ...data,
       role: "USER", // this was hardcoded for users only sign up
-      ...(guestToken && { guestToken }),
     };
     try {
       const response = await api.post("/api/auth/register", payload);
       localStorage.setItem("token", response.data.data.token);
-      localStorage.removeItem("guestToken"); // remove guest token after successful registration
       router.push(redirectTo);
-      console.log("Registration successful:", response.data);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Registration failed:", error.message);

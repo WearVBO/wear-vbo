@@ -1,104 +1,74 @@
 "use client";
 import React from "react";
-import useSWR from "swr";
-import api from "@/lib/axios";
+import { useCart } from "@/hooks/useCart";
+import { cartLineKey } from "@/lib/types";
+import { OrderSummarySkeleton } from "@/components/containers/skeletons";
+import type { CouponPreview, ShippingMethod } from "@/lib/types";
 
-interface CartItem {
-  _id: string;
-  productId: {
-    _id: string;
-    productName: string;
-    productPrice: number;
-    productImages: { url: string; publicId: string; _id: string }[];
-  };
-  quantity: number;
+interface OrderSummaryProps {
+  shippingMethod?: ShippingMethod | null;
+  coupon?: CouponPreview | null;
 }
 
-const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
-  const guestToken = localStorage.getItem("guestToken");
-  const authToken = token || guestToken;
+/**
+ * Display only. Every figure here comes straight from the API — the binding
+ * total is the `amount` returned by POST /api/checkout.
+ */
+const OrderSummary = ({ shippingMethod, coupon }: OrderSummaryProps) => {
+  const { items, subtotal, isLoading, error } = useCart();
 
-  const response = await api.get(url, {
-    headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
-  });
-  return response.data; 
-}
+  if (isLoading) return <OrderSummarySkeleton />;
+  if (error) return <div>Failed to load your cart</div>;
+  if (items.length === 0) return <div>Your cart is empty</div>;
 
-const OrderSummary = () => {
-  const { data, isLoading, error } = useSWR("/api/cart/get-cart", fetcher);
-  const cartItems: CartItem[] = data?.cart?.items || data?.cart || [];
-
-  const subtotal = cartItems.reduce(
-    (acc: number, item: CartItem) =>
-      acc + item.productId.productPrice * item.quantity,
-    0,
-  );
-  // const discount = Math.round(subtotal * 0.2);
-  const deliveryFee = 1500;
-  const total = subtotal  + deliveryFee;
-
-  const summaryItems = [
-    {
-      label: "Subtotal",
-      value: `₦${subtotal.toLocaleString()}`,
-      style: "text-black",
-    },
-    // {
-    //   label: "Discount (20%)",
-    //   value: `-$${discount.toFixed(2)}`,
-    //   style: "text-red-500",
-    // },
-    {
-      label: "Delivery Fee",
-      value: `₦${deliveryFee.toLocaleString()}`,
-      style: "text-black",
-    },
-    // { label: "Total", value: `$${total.toFixed(2)}`, isTotal: true },
-  ];
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Please login to view your cart</div>;
   return (
     <div className="flex flex-col gap-4">
       {/* items */}
       <div className="flex flex-col gap-4">
-        {cartItems.map(
-          (
-            item: CartItem,
-            index: number,
-          ) => (
-            <div key={index} className="flex justify-between text-sm">
-              <span>
-                {item.productId.productName} x{item.quantity}
-              </span>
-              <span>₦{(item.productId.productPrice * item.quantity).toLocaleString()}</span>
-            </div>
-
-
-          ),
-        )}
+        {items.map((item) => (
+          <div key={cartLineKey(item)} className="flex justify-between text-sm">
+            <span>
+              {item.productName}
+              {item.attributes?.size ? ` (${item.attributes.size})` : ""} x
+              {item.quantity}
+            </span>
+            <span>₦{item.lineTotal.toLocaleString()}</span>
+          </div>
+        ))}
       </div>
+
       <hr />
 
-      {/* summary */}
-      {summaryItems.map((item, index) => (
-        <div
-          key={index}
-          className={`flex justify-between text-sm ${item.style}`}
-        >
-          <span>{item.label}</span>
-          <span>{item.value}</span>
+      <div className="flex justify-between text-sm">
+        <span>Subtotal</span>
+        <span>₦{subtotal.toLocaleString()}</span>
+      </div>
+
+      {coupon && (
+        <div className="flex justify-between text-sm text-green-600">
+          <span>Coupon ({coupon.code})</span>
+          <span>-₦{coupon.discount.toLocaleString()}</span>
         </div>
-      ))}
+      )}
+
+      {shippingMethod && (
+        <div className="flex justify-between text-sm">
+          <span>
+            Delivery ({shippingMethod.name}
+            {shippingMethod.estimatedDays
+              ? `, ${shippingMethod.estimatedDays}`
+              : ""}
+            )
+          </span>
+          <span>₦{shippingMethod.fee.toLocaleString()}</span>
+        </div>
+      )}
 
       <hr />
 
-      {/* total */}
-      <div className="flex justify-between text-lg font-bold">
-        <span>Total</span>
-        <span>₦{total.toLocaleString()}</span>
-      </div>
+      <p className="text-xs text-gray-500">
+        Your final total is confirmed on the secure payment page.
+      </p>
     </div>
   );
 };

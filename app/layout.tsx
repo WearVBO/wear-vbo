@@ -3,13 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 // import { ThemeProvider } from "next-themes";
 import "./globals.css";
-// import NavBar from "@/components/containers/Navbar/NavBar";
-import DesktopNav from "@/components/containers/Navbar/DesktopNav";
-import MobileNav from "@/components/containers/Navbar/MobileNav";
-// import Header from "@/components/containers/Header";
-import AOSInit from "@/components/containers/AOSInit";
-import Footer from "@/components/containers/Footer/Footer";
-import GuestSessionInit from "@/components/containers/GuestSessionInit";
+import MainLayout from "@/components/layout/websiteLayout/mainLayout";
 import {Toaster} from "react-hot-toast";
 
 const geistSans = Geist({
@@ -43,23 +37,8 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem={true}
         > */}
-        <GuestSessionInit />
         <Toaster position="top-right" />
-        <div className="hidden md:block">
-          <DesktopNav />
-        </div>
-        <div className="md:hidden">
-          <MobileNav />
-        </div>
-        {/* <div className="w-full max-w-[1130px]  mx-auto">
-
-            <Header />
-          </div> */}
-        <AOSInit />
-        <div className="max-w-[1440px] mx-auto">
-        {children}
-          <Footer />
-        </div>
+        <MainLayout>{children}</MainLayout>
         {/* </ThemeProvider> */}
       </body>
     </html>

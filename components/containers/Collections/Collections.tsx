@@ -1,61 +1,40 @@
 "use client";
 import React, { useState } from "react";
-import { getGuestSession } from "@/lib/guestSession";
 import useSWR from "swr";
-import api from "@/lib/axios";
 // import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/containers/Collections/ProductCard";
 import Sidebar from "@/components/containers/Collections/Sidebar";
 import { CollectionsPagination } from "./Pagination";
-
-
-interface Product {
-  _id: string;
-  productName: string;
-  productDescription: string;
-  productPrice: number;
-  ratings: number;
-  sizes: string[];
-  tags: string[];
-  availableColors: string[];
-  productImages: { url: string; publicId: string; _id: string }[];
-  isSoldOut: boolean;
-}
-
-const fetcher = async (url: string) => {
-  const token = localStorage.getItem("token");
-  let guestToken = localStorage.getItem("guestToken");
-  const authToken = token || guestToken;
-
-  if (!guestToken && !token) {
-    guestToken = await getGuestSession();
-  }
-
-  const response = await api.get(url, {
-    headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
-  });
-  return response.data;
-};
+import { buildProductUrl, getProducts } from "@/services/product.service";
+import { ProductGridSkeleton } from "@/components/containers/skeletons";
+import type { Product } from "@/lib/types";
 
 const CollectionsPage = () => {
   const searchParams = useSearchParams();
   const categoryParam = searchParams?.get("category") || "";
   const searchParam = searchParams?.get("search") || "";
 
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam);
+  // sidebar selection is a category _id from GET /api/category;
+  // the `?category=` URL param from the nav is a collection tag.
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState("newest");
 
-
-
- const url = `/api/product/get-products?page=${page}&limit=9&sort=${sort}${categoryParam ? `&collections=${categoryParam}` : ""}${searchParam ? `&search=${searchParam}` : ""}`;
-const { data, isLoading, error } = useSWR(url, fetcher, {
-  revalidateOnFocus: false,
-});
+  const url = buildProductUrl({
+    page,
+    limit: 9,
+    sort,
+    collections: categoryParam,
+    search: searchParam,
+    category: selectedCategory,
+  });
+  const { data, isLoading, error } = useSWR(url, getProducts, {
+    revalidateOnFocus: false,
+  });
 
 // console.log("current sort:", sort);
 
@@ -73,6 +52,11 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
       : true;
     return matchColor && matchSize;
   });
+
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setPage(1);
+  };
 
   const handleColorChange = (color: string) => {
     setSelectedColors((prev) =>
@@ -101,7 +85,7 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
           selectedCategory={selectedCategory}
           selectedColors={selectedColors}
           selectedSizes={selectedSizes}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           onColorChange={handleColorChange}
           onSizeChange={handleSizeChange}
         />
@@ -133,13 +117,15 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
 </select>
           </div>
 
-          {isLoading && <p className="text-center py-10">Loading...</p>}
           {error && (
             <p className="text-center py-10 text-red-500">
               Error loading products
             </p>
           )}
 
+          {isLoading ? (
+            <ProductGridSkeleton count={9} />
+          ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {filteredProducts.map((product: Product) => (
               // <Link key={product._id} href={`/collections/product/${product._id}`}>
@@ -160,6 +146,7 @@ const { data, isLoading, error } = useSWR(url, fetcher, {
               // </Link>
             ))}
           </div>
+          )}
           <div className="mt-8">
             <CollectionsPagination
               page={page}

@@ -7,7 +7,10 @@ import { SlHandbag } from "react-icons/sl";
 import { PiHeartStraight, PiHeartStraightFill } from "react-icons/pi";
 import api from "@/lib/axios";
 import toast from "react-hot-toast"
-// import { getGuestSession } from "@/lib/guestSession";
+import { useSWRConfig } from "swr";
+import { addToCart } from "@/services/cart.service";
+import { getApiErrorMessage } from "@/lib/apiClient";
+import { CART_KEY } from "@/hooks/useCart";
 
 export interface ProductCardProps {
   _id: string;
@@ -46,67 +49,43 @@ const StarRating = ({ rating }: { rating: number }) => {
 
 const ProductCard = ({ product }: { product: ProductCardProps }) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
-
-  
+  const { mutate } = useSWRConfig();
 
   const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const guestToken = localStorage.getItem("guestToken");
-      const authToken = token || guestToken;
-      
-        //logged in user
-        await api.post(
-          "/api/cart/add-cart",
-          {
-            productId: product._id,
-            quantity: 1,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          },
-        );
-        toast.success("Added to cart!")
-    
+      await addToCart(product._id, 1);
+      mutate(CART_KEY);
+      toast.success("Added to cart!");
     } catch (error) {
-      console.error("Failed to add to cart", error);
-      alert("Failed to add to cart. Please try again.")
+      // covers the 409 "Only N unit(s) available" response too
+      toast.error(getApiErrorMessage(error, "Failed to add to cart."));
     }
   };
+
   const handleFavorite = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const guestToken = localStorage.getItem("guestToken");
-      const authToken = token || guestToken;
-      // if (!token) {
-      //   alert("Please login to add to favorites");
-      //   return;
-      // }
+      if (!token) {
+        toast.error("Please log in to save favorites");
+        return;
+      }
       if (isFavorite) {
         await api.delete(`/api/favorites/${product._id}`, {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
       } else {
         await api.post(
           `/api/favorites/add`,
           { productId: product._id },
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          },
+          { headers: { Authorization: `Bearer ${token}` } },
         );
       }
 
       setIsFavorite(!isFavorite);
     } catch (error) {
-      console.error("Failed to toggle favorite", error);
+      toast.error(getApiErrorMessage(error, "Failed to update favorites."));
     }
   };
   return (
