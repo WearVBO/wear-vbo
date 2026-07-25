@@ -31,6 +31,8 @@ export const NavLinks = [
         items: [
           { label: "Tops", path: "/collections?category=female&subcategory=tops" },
           { label: "Bottoms", path: "/collections?category=female&subcategory=bottoms" },
+          { label: "Sets", path: "/collections?category=female&subcategory=sets" },
+          { label: "Dresses", path: "/collections?category=female&subcategory=dresses" },
         ],
       },
       {
@@ -46,8 +48,7 @@ export const NavLinks = [
         category: "Unisex",
         path: "/collections?category=unisex",
         items: [
-          { label: "Hoodies", path: "/collections?category=unisex&subcategory=hoodies" },
-          { label: "Sweatshirts", path: "/collections?category=unisex&subcategory=sweatshirts" },
+          { label: "Hoodies", path: "/collections?category=unisex&subcategory=hoodies" }
         ],
       },
     ],
