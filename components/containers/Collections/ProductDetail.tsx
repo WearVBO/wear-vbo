@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import Link from "next/link";
+import {useRouter} from "next/navigation"
 import Image from "next/image";
 import { PiHeartStraightFill, PiHeartStraight } from "react-icons/pi";
 import { SlHandbag } from "react-icons/sl";
@@ -40,6 +41,8 @@ const ProductDetail = ({ productId }: { productId: string }) => {
   const [isAdding, setIsAdding] = useState(false);
   const { mutate } = useSWRConfig();
 
+  const router = useRouter();
+
   const { data, isLoading, error } = useSWR(
     productId ? `/api/product/get-single-product/${productId}` : null,
     () => getSingleProduct(productId),
@@ -75,6 +78,11 @@ const ProductDetail = ({ productId }: { productId: string }) => {
       const token = localStorage.getItem("token");
       if (!token) {
         toast.error("Please log in to save favorites");
+        setTimeout(() => {
+          const currentPath = window.location.pathname;
+          router.push(`/login?redirect=${currentPath}`)
+        }, 1500)
+
         return;
       }
       if (isFavorite) {
