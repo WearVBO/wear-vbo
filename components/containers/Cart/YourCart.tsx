@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { IoIosArrowForward } from "react-icons/io";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import toast from "react-hot-toast";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { useCart } from "@/hooks/useCart";
 import { cartLineKey, type CartItem } from "@/lib/types";
 import {
@@ -135,6 +136,12 @@ const YourCart = () => {
 
       {items.length === 0 ? (
         <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+          <DotLottieReact
+            src="https://lottie.host/d091911f-6fe1-4cc7-9790-68742cc0afaf/oyjB5SzO1l.lottie"
+            loop
+            autoplay
+            className="w-48 h-48"
+          />
           <p className="text-gray-500 text-lg">Your cart is empty.</p>
           <Link
             href="/collections"

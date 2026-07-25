@@ -133,7 +133,7 @@ export default function MobileNav() {
           </Sheet>
 
           <Image
-            src="/Image/new-black.png"
+            src="/Image/new-vbo.png"
             alt="Wearvbo Logo"
             width={30}
             height={30}

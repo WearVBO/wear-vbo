@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { FiPhone } from "react-icons/fi";
 import { MdOutlineEmail } from "react-icons/md";
 // import { Input } from "@heroui/input";
@@ -6,36 +6,32 @@ import { MdOutlineEmail } from "react-icons/md";
 // import {Textarea} from "@heroui/input";
 
 const Details = () => {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   // contact info
   const contactInfo = [
     {
       icon: <FiPhone size={24} />,
       detail: "09086778654",
+       href: "tel:09086778654",
     },
     {
       icon: <MdOutlineEmail size={24} />,
-      detail: "hi@hotmail.com",
+      detail: "vbo@collectives.com",
+      href: "mailto:vbo@collectives.com"
     },
   ];
 
-  // input
-  // const inputInfo = [
-  //   {
-  //     type: "text",
-  //     label: "Name",
-  //     placeholder: "Enter your name",
-  //   },
-  //   {
-  //     type: "email",
-  //     label: "Email",
-  //     placeholder: "Enter your Email...",
-  //   },
-  //   // {
-  //   //   type: "text",
-  //   //   label: "Message",
-  //   //   placeholder: "Your message",
-  //   // },
-  // ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+     const whatsappMessage = `Hello WearVBO!%0A%0AName: ${name}%0AEmail: ${email}%0A%0AMessage: ${message}`;
+    const whatsappNumber = "2348109641033"; // add country code (234 for Nigeria)
+    window.open(`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`, "_blank");
+  }
+
+
   return (
     <section className="px-4 md:px-14 py-7 md:py-24">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -50,16 +46,16 @@ const Details = () => {
           {/* left: contact details */}
           <div className="flex flex-col gap-5 mt-4">
             {contactInfo.map((info, i) => (
-              <div key={i} className="flex items-center gap-5 font-bold text-lg">
+              <a key={i} href={info.href} className="flex items-center gap-5 font-bold text-lg">
                 <span>{info.icon}</span>
                 <p>{info.detail}</p>
-              </div>
+              </a>
             ))}
           </div>
         </div>
 
         {/*right: form */}
-        <form className="flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           {/* Name + Email side by side on desktop */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
@@ -69,6 +65,9 @@ const Details = () => {
               <input
                 type="text"
                 placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
                 className="border border-gray-200 bg-gray-100 rounded-md px-4 py-2 text-sm outline-none focus:ring-1 focus:ring-black"
               />
             </div>
@@ -79,6 +78,9 @@ const Details = () => {
               <input
                 type="email"
                 placeholder="Enter your email..."
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 className="border border-gray-200 bg-gray-100 rounded-md px-4 py-2 text-sm outline-none focus:ring-1 focus:ring-black"
               />
             </div>
@@ -91,7 +93,11 @@ const Details = () => {
             </label>
             <textarea
               placeholder="Enter your message..."
+
               rows={5}
+              value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
               className="border border-gray-200 bg-gray-100 rounded-md px-4 py-2 text-sm outline-none focus:ring-1 focus:ring-black resize-none"
             />
           </div>

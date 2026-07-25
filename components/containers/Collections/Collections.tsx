@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 // import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -69,6 +69,10 @@ const CollectionsPage = () => {
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size],
     );
   };
+
+  useEffect(() => {
+    window.scrollTo({top: 0, behavior: "smooth"})
+  }, [searchParam, categoryParam])
 
 //   console.log("selectedSizes:", selectedSizes);
 // console.log("filteredProducts:", filteredProducts.length);
@@ -151,7 +155,10 @@ const CollectionsPage = () => {
             <CollectionsPagination
               page={page}
               totalPages={totalPages}
-              onPageChange={setPage}
+              onPageChange={(newPage) => {
+                setPage(newPage);
+                window.scrollTo({top: 0, behavior: "smooth"})
+              }}
             />
           </div>
         </div>

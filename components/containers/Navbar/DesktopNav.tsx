@@ -17,11 +17,7 @@ import {useCartCount, useFavoritesCount} from "@/hooks/useCounts";
 
 
 
-// const poppins = Poppins({
-//   subsets: ["latin"],
-//   weight: ["400"],
-// });
-// export
+
 
 
 export default function DesktopNav() {
@@ -54,7 +50,7 @@ const [searchQuery, setSearchQuery] = useState("")
           <div className="flex-shrink-0">
             <Link href="/">
               <Image
-                src="/Image/new-black.png"
+                src="/Image/new-vbo.png"
                 alt="WearVbo Logo"
                 width={80}
                 height={50}
@@ -77,8 +73,8 @@ const [searchQuery, setSearchQuery] = useState("")
             {/* search bar */}
             <div className="hidden md:block">
               <form onSubmit={handleSearch} className="w-full  m-auto">
-                <div className="w-[200px] md:w-[250px] lg:w-[300px] flex items-center border pl-4 gap-2 border-gray h-[42px] md:[46px] rounded-full overflow-hidden bg-gray-200 ">
-                  <HiOutlineSearch className="text-gray-600 text-xl md:text-2xl flex-shrink-0" />
+                <div className="w-[200px] md:w-[250px] lg:w-[300px] flex items-center border pl-4 gap-2 border-gray h-[42px] md:[46px] rounded-full overflow-hidden bg-gray-100 ">
+                  <HiOutlineSearch className="text-gray-500 text-xl md:text-2xl flex-shrink-0" />
                   <input
                     type="text"
                     placeholder="Search for products..."

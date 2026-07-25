@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 // import { usePathname } from 'next/navigation'
 import { SlHandbag } from "react-icons/sl";
 import { PiHeartStraight, PiHeartStraightFill } from "react-icons/pi";
@@ -11,6 +12,7 @@ import { useSWRConfig } from "swr";
 import { addToCart } from "@/services/cart.service";
 import { getApiErrorMessage } from "@/lib/apiClient";
 import { CART_KEY } from "@/hooks/useCart";
+
 
 export interface ProductCardProps {
   _id: string;
@@ -51,6 +53,8 @@ const ProductCard = ({ product }: { product: ProductCardProps }) => {
   const [isFavorite, setIsFavorite] = React.useState(false);
   const { mutate } = useSWRConfig();
 
+  const router = useRouter();
+
   const handleAddToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -69,6 +73,10 @@ const ProductCard = ({ product }: { product: ProductCardProps }) => {
       const token = localStorage.getItem("token");
       if (!token) {
         toast.error("Please log in to save favorites");
+        setTimeout(() => {
+          const currentPath = window.location.pathname;
+          router.push(`/login?redirect=${currentPath}`)
+        }, 1500)
         return;
       }
       if (isFavorite) {
