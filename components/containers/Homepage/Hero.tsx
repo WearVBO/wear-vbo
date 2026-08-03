@@ -1,6 +1,7 @@
 import React from "react";
 // import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -12,7 +13,7 @@ const Hero = () => {
           <p className="rounded-tl-lg bg-[#FFC633] px-3 py-1 font-bold text-md">
             NGN #
           </p>
-          <p className="rounded-bl-lg bg-white px-3 py-1 font-bold text-md"> 
+          <p className="rounded-bl-lg bg-white px-3 py-1 font-bold text-md">
             USD $
           </p>
         </div>
@@ -24,9 +25,12 @@ const Hero = () => {
             Browse through our diverse range of active wears, designed to bring
             out your individuality and cater to your sense of style
           </p>
-          <Button className="mt-6 bg-black w-full rounded-full max-w-[250px] md:max-w-[360px] h-full max-h-[50px] text-md cursor-pointer">
+          <Link
+            href="/collections"
+            className="mt-6 bg-black text-white w-full rounded-full max-w-[250px] md:max-w-[360px] flex items-center justify-center h-[50px] text-md cursor-pointer hover:bg-gray-800 transition-colors"
+          >
             Shop Now
-          </Button>
+          </Link>
         </div>
       </div>
     </section>
